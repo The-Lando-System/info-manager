@@ -1,0 +1,8 @@
+build
+.idea
+.gradle
+sarlacc.iml
+sarlacc.ipr
+sarlacc.iws
+configure.properties
+application.properties
