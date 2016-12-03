@@ -31,10 +31,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String name = authentication.getName();
         String password = authentication.getCredentials().toString();
 
+        SarlaccClient client = new SarlaccClient("acme","acmesecret","http://localhost:8080/oauth/token","http://localhost:8080/user-details");
 
-
-        Token token = SarlaccClient.getUserToken(name,password);
-        User user = SarlaccClient.getUserDetails(token);
+        Token token = client.getUserToken(name,password,"password");
+        User user = client.getUserDetails(token);
 
         log.info("Got user: " + user.getUsername());
 
