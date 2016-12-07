@@ -1,9 +1,8 @@
 package com.mattvoget.infomanager.services;
 
-import com.mattvoget.sarlacc.client.models.User;
+import com.mattvoget.sarlacc.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

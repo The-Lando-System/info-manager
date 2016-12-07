@@ -1,8 +1,8 @@
 package com.mattvoget.infomanager.config;
 
 import com.mattvoget.sarlacc.client.SarlaccClient;
-import com.mattvoget.sarlacc.client.models.Token;
-import com.mattvoget.sarlacc.client.models.User;
+import com.mattvoget.sarlacc.models.Token;
+import com.mattvoget.sarlacc.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -10,10 +10,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {

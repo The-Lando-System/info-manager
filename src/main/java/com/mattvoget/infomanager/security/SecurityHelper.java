@@ -1,6 +1,7 @@
 package com.mattvoget.infomanager.security;
 
-import com.mattvoget.sarlacc.client.models.User;
+import com.mattvoget.sarlacc.models.Role;
+import com.mattvoget.sarlacc.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,9 +13,11 @@ public class SecurityHelper {
     private Logger log = LoggerFactory.getLogger(SecurityHelper.class);
 
     public boolean hasAccess(){
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        log.info("Allowing access for user: " + user.getUsername());
-        return true;
+        return getUser() == null ? false : true;
+    }
+
+    public boolean isAdmin(){
+        return hasAccess() ? (getUser().getRole() == Role.ADMIN) : false;
     }
 
     private User getUser(){
