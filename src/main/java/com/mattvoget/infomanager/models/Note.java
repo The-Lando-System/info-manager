@@ -2,9 +2,6 @@ package com.mattvoget.infomanager.models;
 
 import org.springframework.data.annotation.Id;
 
-/**
- * Created by Matt on 12/2/2016.
- */
 public class Note {
 
 
