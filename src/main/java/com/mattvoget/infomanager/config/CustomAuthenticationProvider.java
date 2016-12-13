@@ -21,20 +21,27 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
-        if (SecurityContextHolder.getContext().getAuthentication() != null){
-            return SecurityContextHolder.getContext().getAuthentication();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth != null){
+            User user = (User) auth.getPrincipal();
+            log.debug("User still loaded in security context: " + user.getUsername());
+            return auth;
         }
 
-        log.info("In the custom auth provider");
         String name = authentication.getName();
         String password = authentication.getCredentials().toString();
+
+        log.info(String.format("Calling Sarlacc to authenticate user with creds: username=%s, password=%s",name,password));
 
         SarlaccClient client = new SarlaccClient("acme","acmesecret","http://localhost:8080/oauth/token","http://localhost:8080/user-details");
 
         Token token = client.getUserToken(name,password,"password");
         User user = client.getUserDetails(token);
 
-        log.info("Got user: " + user.getUsername());
+        log.info("Successfully retrieved user from the Sarlacc: " + user.getUsername());
+
+        user.setToken(token);
 
         return new UsernamePasswordAuthenticationToken(user, user.getAuthorities());
     }

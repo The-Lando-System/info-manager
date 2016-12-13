@@ -1,28 +1,31 @@
 package com.mattvoget.infomanager.controllers;
 
-import org.springframework.security.access.prepost.PreAuthorize;
+import com.mattvoget.infomanager.security.SecurityHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
-
 @Controller
 @RequestMapping(value="test")
-public class TestController {
+public class TestController extends ErrorHandlingController {
 
-    @PreAuthorize("@securityHelper.hasAccess()")
+    @Autowired
+    SecurityHelper securityHelper;
+
     @RequestMapping(value="/user", method= RequestMethod.GET)
     @ResponseBody
-    public String userTest() {
+    public String userTest(@RequestHeader(value="x-access-token") String accessToken) {
+        securityHelper.checkAccess(accessToken);
         return "You have normal user access!";
     }
 
-    @PreAuthorize("@securityHelper.isAdmin()")
     @RequestMapping(value="/admin", method= RequestMethod.GET)
     @ResponseBody
-    public String adminTest() {
+    public String adminTest(@RequestHeader(value="x-access-token") String accessToken) {
+        securityHelper.checkAdmin(accessToken);
         return "You are an administrator!";
     }
 }
