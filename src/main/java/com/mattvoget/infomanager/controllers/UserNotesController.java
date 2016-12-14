@@ -1,8 +1,9 @@
 package com.mattvoget.infomanager.controllers;
 
 import com.mattvoget.infomanager.models.Note;
-import com.mattvoget.infomanager.security.SecurityHelper;
 import com.mattvoget.infomanager.services.UserNoteService;
+import com.mattvoget.sarlacc.client.authentication.ErrorHandlingController;
+import com.mattvoget.sarlacc.client.authentication.SecurityHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
