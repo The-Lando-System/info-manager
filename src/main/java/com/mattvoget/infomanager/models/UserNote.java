@@ -1,15 +1,12 @@
 package com.mattvoget.infomanager.models;
 
-
-import java.util.List;
-
-public class UserNotes {
+public class UserNote {
 
     private String id;
     private String username;
-    private List<String> noteIds;
+    private String noteId;
 
-    public UserNotes() {}
+    public UserNote() {}
 
     public String getId() {
         return id;
@@ -27,11 +24,11 @@ public class UserNotes {
         this.username = username;
     }
 
-    public List<String> getNoteIds() {
-        return noteIds;
+    public String getNoteId() {
+        return noteId;
     }
 
-    public void setNoteIds(List<String> noteIds) {
-        this.noteIds = noteIds;
+    public void setNoteId(String noteId) {
+        this.noteId = noteId;
     }
 }
