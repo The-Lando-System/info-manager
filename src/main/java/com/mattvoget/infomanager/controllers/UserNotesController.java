@@ -35,5 +35,11 @@ public class UserNotesController extends ErrorHandlingController {
         return userNoteService.getUserNotes(securityHelper.getUser());
     }
 
+    @RequestMapping(value="/{noteId}", method= RequestMethod.GET)
+    @ResponseBody
+    public Note getNoteById(@RequestHeader(value="x-access-token") String accessToken, @PathVariable String noteId ) {
+        securityHelper.checkAccess(accessToken);
+        return userNoteService.getNoteById(noteId, securityHelper.getUser());
+    }
 
 }

@@ -5,6 +5,7 @@ import com.mattvoget.infomanager.models.UserNote;
 import com.mattvoget.infomanager.repositories.NoteRepository;
 import com.mattvoget.infomanager.repositories.UserNoteRepository;
 import com.mattvoget.sarlacc.models.User;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,18 @@ public class UserNoteService {
         }
 
         return notes;
+    }
+
+    public Note getNoteById(String noteId, User user){
+        log.info(String.format("Getting the following note for user %s: %s",user.getUsername(),noteId));
+
+        UserNote userNote = userNoteRepo.findByNoteId(noteId);
+
+        if (!StringUtils.equals(userNote.getUsername(),user.getUsername())){
+            throw new IllegalAccessError("You are not allowed to view this note!");
+        }
+
+        return noteRepository.findOne(noteId);
     }
 
 }

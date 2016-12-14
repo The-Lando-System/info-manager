@@ -10,5 +10,6 @@ import java.util.List;
 public interface UserNoteRepository extends MongoRepository<UserNote, String>{
 
     List<UserNote> findByUsername(String username);
+    UserNote findByNoteId(String noteId);
 
 }
