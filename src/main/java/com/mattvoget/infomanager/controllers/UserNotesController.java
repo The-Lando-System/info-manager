@@ -8,9 +8,11 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping(value="notes", produces= MediaType.APPLICATION_JSON_VALUE)
-public class UserNotesController {
+public class UserNotesController extends ErrorHandlingController {
 
     @Autowired
     SecurityHelper securityHelper;
@@ -20,16 +22,16 @@ public class UserNotesController {
 
     @RequestMapping(value="/", method= RequestMethod.POST)
     @ResponseBody
-    public Note createNote(@RequestBody Note note, @RequestHeader(value="x-access-token") String accessToken) {
+    public Note createUserNote(@RequestBody Note note, @RequestHeader(value="x-access-token") String accessToken) {
         securityHelper.checkAccess(accessToken);
         return userNoteService.createNote(note,securityHelper.getUser());
     }
 
     @RequestMapping(value="/", method= RequestMethod.GET)
     @ResponseBody
-    public Note createNote(@RequestBody Note note, @RequestHeader(value="x-access-token") String accessToken) {
+    public List<Note> getUserNotes(@RequestHeader(value="x-access-token") String accessToken) {
         securityHelper.checkAccess(accessToken);
-        return userNoteService.createNote(note,securityHelper.getUser());
+        return userNoteService.getUserNotes(securityHelper.getUser());
     }
 
 

@@ -20,15 +20,20 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        if (auth != null){
-            User user = (User) auth.getPrincipal();
-            log.debug("User still loaded in security context: " + user.getUsername());
-            return auth;
+        if (authentication != null && !(authentication.getPrincipal() instanceof User)) {
+            SecurityContextHolder.getContext().setAuthentication(null);
+            return getAuthFromExternal(authentication);
+        } else {
+            return SecurityContextHolder.getContext().getAuthentication();
         }
+    }
 
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return true;
+    }
+
+    private Authentication getAuthFromExternal(Authentication authentication){
         String name = authentication.getName();
         String password = authentication.getCredentials().toString();
 
@@ -44,10 +49,5 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         user.setToken(token);
 
         return new UsernamePasswordAuthenticationToken(user, user.getAuthorities());
-    }
-
-    @Override
-    public boolean supports(Class<?> authentication) {
-        return true;
     }
 }

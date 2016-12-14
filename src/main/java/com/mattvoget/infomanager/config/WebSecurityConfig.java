@@ -1,6 +1,8 @@
 package com.mattvoget.infomanager.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,6 +19,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authProvider);
+    }
+
+    @Bean
+    public FilterRegistrationBean authFilterRegistrationBean() {
+        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+        registrationBean.setName("AuthFilter");
+        AuthFilter authFilter = new AuthFilter();
+        registrationBean.setFilter(authFilter);
+        registrationBean.addUrlPatterns("/note/*");
+        registrationBean.setOrder(2);
+        return registrationBean;
     }
 
     @Override

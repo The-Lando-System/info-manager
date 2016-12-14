@@ -11,13 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class UserNoteService {
 
     private Logger log = LoggerFactory.getLogger(UserNoteService.class);
 
     @Autowired
-    UserNoteRepository userNotesRepo;
+    UserNoteRepository userNoteRepo;
 
     @Autowired
     NoteRepository noteRepository;
@@ -33,9 +36,21 @@ public class UserNoteService {
         userNote.setUsername(user.getUsername());
         userNote.setNoteId(savedNote.getId());
 
-        userNotesRepo.save(userNote);
+        userNoteRepo.save(userNote);
 
         return savedNote;
+    }
+
+    public List<Note> getUserNotes(User user){
+        log.info("Retrieving all notes for user: " + user.getUsername());
+
+        List<Note> notes = new ArrayList<Note>();
+
+        for (UserNote userNote : userNoteRepo.findByUsername(user.getUsername())) {
+            notes.add(noteRepository.findOne(userNote.getNoteId()));
+        }
+
+        return notes;
     }
 
 }
