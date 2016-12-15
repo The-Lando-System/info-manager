@@ -42,6 +42,19 @@ public class UserNoteService {
         return savedNote;
     }
 
+    public Note editNote(Note note, User user){
+
+        log.info("Editing a note for user: " + user.getUsername());
+
+        UserNote userNote = userNoteRepo.findByNoteId(note.getId());
+
+        if (!StringUtils.equals(userNote.getUsername(),user.getUsername())){
+            throw new IllegalAccessError("You are not allowed to edit this note!");
+        }
+
+        return noteRepository.save(note);
+    }
+
     public List<Note> getUserNotes(User user){
         log.info("Retrieving all notes for user: " + user.getUsername());
 
@@ -64,6 +77,20 @@ public class UserNoteService {
         }
 
         return noteRepository.findOne(noteId);
+    }
+
+    @Transactional
+    public void deleteNote(String noteId, User user){
+        log.info(String.format("Deleting the following note for user %s: %s",user.getUsername(),noteId));
+
+        UserNote userNote = userNoteRepo.findByNoteId(noteId);
+
+        if (!StringUtils.equals(userNote.getUsername(),user.getUsername())){
+            throw new IllegalAccessError("You are not allowed to delete this note!");
+        }
+
+        userNoteRepo.delete(userNote.getId());
+        noteRepository.delete(userNote.getNoteId());
     }
 
 }
