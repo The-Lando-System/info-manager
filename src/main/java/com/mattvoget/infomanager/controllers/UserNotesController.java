@@ -1,5 +1,6 @@
 package com.mattvoget.infomanager.controllers;
 
+import com.mattvoget.cryptutils.CryptUtils;
 import com.mattvoget.infomanager.models.Note;
 import com.mattvoget.infomanager.services.UserNoteService;
 import com.mattvoget.sarlacc.client.authentication.ErrorHandlingController;

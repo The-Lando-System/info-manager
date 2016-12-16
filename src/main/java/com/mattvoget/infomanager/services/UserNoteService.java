@@ -1,9 +1,11 @@
 package com.mattvoget.infomanager.services;
 
+import com.mattvoget.cryptutils.CryptUtils;
 import com.mattvoget.infomanager.models.Note;
 import com.mattvoget.infomanager.models.UserNote;
 import com.mattvoget.infomanager.repositories.NoteRepository;
 import com.mattvoget.infomanager.repositories.UserNoteRepository;
+import com.mattvoget.infomanager.utils.UserHelper;
 import com.mattvoget.sarlacc.models.User;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -26,12 +28,15 @@ public class UserNoteService {
     @Autowired
     NoteRepository noteRepository;
 
+    @Autowired
+    CryptUtils cryptUtils;
+
     @Transactional
     public Note createNote(Note note, User user){
 
         log.info("Creating a new note for user: " + user.getUsername());
 
-        Note savedNote = noteRepository.save(note);
+        Note savedNote = noteRepository.save(encryptNote(note));
 
         UserNote userNote = new UserNote();
         userNote.setUsername(user.getUsername());
@@ -39,7 +44,7 @@ public class UserNoteService {
 
         userNoteRepo.save(userNote);
 
-        return savedNote;
+        return decryptNote(savedNote);
     }
 
     public Note editNote(Note note, User user){
@@ -48,11 +53,10 @@ public class UserNoteService {
 
         UserNote userNote = userNoteRepo.findByNoteId(note.getId());
 
-        if (!StringUtils.equals(userNote.getUsername(),user.getUsername())){
-            throw new IllegalAccessError("You are not allowed to edit this note!");
-        }
+        UserHelper.checkUsernames(userNote.getUsername(),user.getUsername(),
+                "You are not allowed to edit this note!");
 
-        return noteRepository.save(note);
+        return decryptNote(noteRepository.save(encryptNote(note)));
     }
 
     public List<Note> getUserNotes(User user){
@@ -61,7 +65,7 @@ public class UserNoteService {
         List<Note> notes = new ArrayList<Note>();
 
         for (UserNote userNote : userNoteRepo.findByUsername(user.getUsername())) {
-            notes.add(noteRepository.findOne(userNote.getNoteId()));
+            notes.add(decryptNote(noteRepository.findOne(userNote.getNoteId())));
         }
 
         return notes;
@@ -72,11 +76,10 @@ public class UserNoteService {
 
         UserNote userNote = userNoteRepo.findByNoteId(noteId);
 
-        if (!StringUtils.equals(userNote.getUsername(),user.getUsername())){
-            throw new IllegalAccessError("You are not allowed to view this note!");
-        }
+        UserHelper.checkUsernames(userNote.getUsername(),user.getUsername(),
+                "You are not allowed to view this note!");
 
-        return noteRepository.findOne(noteId);
+        return decryptNote(noteRepository.findOne(noteId));
     }
 
     @Transactional
@@ -85,12 +88,28 @@ public class UserNoteService {
 
         UserNote userNote = userNoteRepo.findByNoteId(noteId);
 
-        if (!StringUtils.equals(userNote.getUsername(),user.getUsername())){
-            throw new IllegalAccessError("You are not allowed to delete this note!");
-        }
+        UserHelper.checkUsernames(userNote.getUsername(),user.getUsername(),
+                "You are not allowed to delete this note!");
 
         userNoteRepo.delete(userNote.getId());
         noteRepository.delete(userNote.getNoteId());
     }
 
+    private Note encryptNote(Note note){
+        try {
+            note.setDetails(cryptUtils.encrypt(note.getDetails()));
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
+        return note;
+    }
+
+    private Note decryptNote(Note note){
+        try {
+            note.setDetails(cryptUtils.decrypt(note.getDetails()));
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
+        return note;
+    }
 }

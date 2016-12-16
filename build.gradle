@@ -39,4 +39,5 @@ dependencies {
     compile group: 'org.json', name: 'json', version: '20160810'
 
     compile name: 'sarlacc-java-client/sarlacc-java-client-1.0'
+    compile name: 'crypt-utils/crypt-utils-1.0'
 }

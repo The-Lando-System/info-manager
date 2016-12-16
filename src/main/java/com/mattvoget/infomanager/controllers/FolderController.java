@@ -1,6 +1,7 @@
 package com.mattvoget.infomanager.controllers;
 
 import com.mattvoget.infomanager.models.Folder;
+import com.mattvoget.infomanager.models.Note;
 import com.mattvoget.infomanager.services.FolderService;
 import com.mattvoget.sarlacc.client.authentication.SecurityHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,5 +54,12 @@ public class FolderController {
     public void deleteFolder(@RequestHeader(value="x-access-token") String accessToken, @PathVariable String folderId) {
         securityHelper.checkAccess(accessToken);
         folderService.deleteFolder(folderId,securityHelper.getUser());
+    }
+
+    @RequestMapping(value="/{folderId}/notes", method= RequestMethod.GET)
+    @ResponseBody
+    public List<Note> getNotesInFolder(@RequestHeader(value="x-access-token") String accessToken, @PathVariable String folderId ) {
+        securityHelper.checkAccess(accessToken);
+        return folderService.getNotesInFolder(folderId, securityHelper.getUser());
     }
 }

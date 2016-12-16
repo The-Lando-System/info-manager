@@ -1,8 +1,10 @@
 package com.mattvoget.infomanager.config;
 
+import com.mattvoget.cryptutils.CryptUtils;
 import com.mattvoget.sarlacc.client.authentication.AdminFilter;
 import com.mattvoget.sarlacc.client.authentication.SarlaccAuthProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -20,6 +22,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SarlaccAuthProvider authProvider;
 
+    @Value("${encryption.password}")
+    private String encryptionPassword;
+
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authProvider);
@@ -34,6 +39,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         registrationBean.addUrlPatterns("/note/*");
         registrationBean.setOrder(2);
         return registrationBean;
+    }
+
+    @Bean
+    public CryptUtils getCryptUtils(){
+        return new CryptUtils(encryptionPassword);
     }
 
     @Override

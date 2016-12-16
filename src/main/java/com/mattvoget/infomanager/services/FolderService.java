@@ -1,11 +1,13 @@
 package com.mattvoget.infomanager.services;
 
 import com.mattvoget.infomanager.models.Folder;
+import com.mattvoget.infomanager.models.Note;
 import com.mattvoget.infomanager.models.UserFolder;
 import com.mattvoget.infomanager.repositories.FolderRepository;
+import com.mattvoget.infomanager.repositories.NoteRepository;
 import com.mattvoget.infomanager.repositories.UserFolderRepository;
+import com.mattvoget.infomanager.utils.UserHelper;
 import com.mattvoget.sarlacc.models.User;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class FolderService {
 
     @Autowired
     FolderRepository folderRepository;
+
+    @Autowired
+    NoteRepository noteRepository;
 
     @Transactional
     public Folder createFolder(Folder folder, User user){
@@ -47,9 +52,8 @@ public class FolderService {
 
         UserFolder userFolder = userFolderRepo.findByFolderId(folder.getId());
 
-        if (!StringUtils.equals(userFolder.getUsername(),user.getUsername())){
-            throw new IllegalAccessError("You are not allowed to edit this folder!");
-        }
+        UserHelper.checkUsernames(userFolder.getUsername(),user.getUsername(),
+                "You are not allowed to edit this folder!");
 
         return folderRepository.save(folder);
     }
@@ -71,9 +75,8 @@ public class FolderService {
 
         UserFolder userFolder = userFolderRepo.findByFolderId(folderId);
 
-        if (!StringUtils.equals(userFolder.getUsername(),user.getUsername())){
-            throw new IllegalAccessError("You are not allowed to view this folder!");
-        }
+        UserHelper.checkUsernames(userFolder.getUsername(),user.getUsername(),
+                "You are not allowed to view this folder!");
 
         return folderRepository.findOne(folderId);
     }
@@ -84,12 +87,26 @@ public class FolderService {
 
         UserFolder userFolder = userFolderRepo.findByFolderId(folderId);
 
-        if (!StringUtils.equals(userFolder.getUsername(),user.getUsername())){
-            throw new IllegalAccessError("You are not allowed to delete this folder!");
-        }
+        UserHelper.checkUsernames(userFolder.getUsername(),user.getUsername(),
+                "You are not allowed to delete this folder!");
 
         userFolderRepo.delete(userFolder.getId());
         folderRepository.delete(userFolder.getFolderId());
     }
 
+    public List<Note> getNotesInFolder(String folderId, User user) {
+        log.info(String.format("Retrieving all notes in for user %s in folder: %s",user.getUsername(),folderId));
+        UserFolder userFolder = userFolderRepo.findByFolderId(folderId);
+
+        UserHelper.checkUsernames(userFolder.getUsername(),user.getUsername(),
+                "You are not allowed to access notes for this folder!");
+
+        List<Note> notes = new ArrayList<>();
+
+        for (String noteId : folderRepository.findOne(folderId).getNoteIds()){
+            notes.add(noteRepository.findOne(noteId));
+        }
+
+        return notes;
+    }
 }
