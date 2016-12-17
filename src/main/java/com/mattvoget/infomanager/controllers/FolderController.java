@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping(value="folder", produces= MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value="folders", produces= MediaType.APPLICATION_JSON_VALUE)
 public class FolderController {
 
     @Autowired
@@ -61,5 +61,19 @@ public class FolderController {
     public List<Note> getNotesInFolder(@RequestHeader(value="x-access-token") String accessToken, @PathVariable String folderId ) {
         securityHelper.checkAccess(accessToken);
         return folderService.getNotesInFolder(folderId, securityHelper.getUser());
+    }
+
+    @RequestMapping(value="/{folderId}/{noteId}", method= RequestMethod.POST)
+    @ResponseBody
+    public Folder addNoteToFolder(@RequestHeader(value="x-access-token") String accessToken, @PathVariable String folderId, @PathVariable String noteId ) {
+        securityHelper.checkAccess(accessToken);
+        return folderService.addNoteToFolder(folderId, noteId, securityHelper.getUser());
+    }
+
+    @RequestMapping(value="/{folderId}/{noteId}", method= RequestMethod.DELETE)
+    @ResponseBody
+    public Folder removeNoteFromFolder(@RequestHeader(value="x-access-token") String accessToken, @PathVariable String folderId, @PathVariable String noteId ) {
+        securityHelper.checkAccess(accessToken);
+        return folderService.removeNoteFromFolder(folderId, noteId, securityHelper.getUser());
     }
 }

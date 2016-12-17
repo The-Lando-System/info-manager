@@ -3,9 +3,12 @@ package com.mattvoget.infomanager.services;
 import com.mattvoget.infomanager.models.Folder;
 import com.mattvoget.infomanager.models.Note;
 import com.mattvoget.infomanager.models.UserFolder;
+import com.mattvoget.infomanager.models.UserNote;
 import com.mattvoget.infomanager.repositories.FolderRepository;
 import com.mattvoget.infomanager.repositories.NoteRepository;
 import com.mattvoget.infomanager.repositories.UserFolderRepository;
+import com.mattvoget.infomanager.repositories.UserNoteRepository;
+import com.mattvoget.infomanager.utils.NoteHelper;
 import com.mattvoget.infomanager.utils.UserHelper;
 import com.mattvoget.sarlacc.models.User;
 import org.slf4j.Logger;
@@ -25,10 +28,16 @@ public class FolderService {
     UserFolderRepository userFolderRepo;
 
     @Autowired
+    UserNoteRepository userNoteRepo;
+
+    @Autowired
     FolderRepository folderRepository;
 
     @Autowired
     NoteRepository noteRepository;
+
+    @Autowired
+    NoteHelper noteHelper;
 
     @Transactional
     public Folder createFolder(Folder folder, User user){
@@ -104,9 +113,45 @@ public class FolderService {
         List<Note> notes = new ArrayList<>();
 
         for (String noteId : folderRepository.findOne(folderId).getNoteIds()){
-            notes.add(noteRepository.findOne(noteId));
+            notes.add(noteHelper.decryptNote(noteRepository.findOne(noteId)));
         }
 
         return notes;
+    }
+
+    @Transactional
+    public Folder addNoteToFolder(String folderId, String noteId, User user){
+        log.info(String.format("Adding note %s to folder %s for user %s",noteId,folderId,user.getUsername()));
+
+        UserFolder userFolder = userFolderRepo.findByFolderId(folderId);
+        UserNote userNote = userNoteRepo.findByNoteId(noteId);
+
+        UserHelper.checkUsernames(userFolder.getUsername(),user.getUsername(),
+                "You are not allowed to add notes to this folder");
+
+        UserHelper.checkUsernames(userNote.getUsername(),user.getUsername(),
+                "You are not allowed to add this note to your folder");
+
+        Folder folder = folderRepository.findOne(folderId);
+        folder.getNoteIds().add(noteId);
+        return folderRepository.save(folder);
+    }
+
+    @Transactional
+    public Folder removeNoteFromFolder(String folderId, String noteId, User user){
+        log.info(String.format("Removing note %s from folder %s for user %s",noteId,folderId,user.getUsername()));
+
+        UserFolder userFolder = userFolderRepo.findByFolderId(folderId);
+        UserNote userNote = userNoteRepo.findByNoteId(noteId);
+
+        UserHelper.checkUsernames(userFolder.getUsername(),user.getUsername(),
+                "You are not allowed to remove notes from this folder");
+
+        UserHelper.checkUsernames(userNote.getUsername(),user.getUsername(),
+                "You are not allowed to remove this note from your folder");
+
+        Folder folder = folderRepository.findOne(folderId);
+        folder.getNoteIds().remove(noteId);
+        return folderRepository.save(folder);
     }
 }

@@ -2,6 +2,7 @@ package com.mattvoget.infomanager.models;
 
 import org.springframework.data.annotation.Id;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Folder {
@@ -28,6 +29,9 @@ public class Folder {
     }
 
     public List<String> getNoteIds() {
+        if (noteIds == null){
+            noteIds = new ArrayList<>();
+        }
         return noteIds;
     }
 

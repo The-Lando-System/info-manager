@@ -5,6 +5,7 @@ import com.mattvoget.infomanager.models.Note;
 import com.mattvoget.infomanager.models.UserNote;
 import com.mattvoget.infomanager.repositories.NoteRepository;
 import com.mattvoget.infomanager.repositories.UserNoteRepository;
+import com.mattvoget.infomanager.utils.NoteHelper;
 import com.mattvoget.infomanager.utils.UserHelper;
 import com.mattvoget.sarlacc.models.User;
 import org.apache.commons.lang3.StringUtils;
@@ -29,14 +30,14 @@ public class UserNoteService {
     NoteRepository noteRepository;
 
     @Autowired
-    CryptUtils cryptUtils;
+    NoteHelper noteHelper;
 
     @Transactional
     public Note createNote(Note note, User user){
 
         log.info("Creating a new note for user: " + user.getUsername());
 
-        Note savedNote = noteRepository.save(encryptNote(note));
+        Note savedNote = noteRepository.save(noteHelper.encryptNote(note));
 
         UserNote userNote = new UserNote();
         userNote.setUsername(user.getUsername());
@@ -44,7 +45,7 @@ public class UserNoteService {
 
         userNoteRepo.save(userNote);
 
-        return decryptNote(savedNote);
+        return noteHelper.decryptNote(savedNote);
     }
 
     public Note editNote(Note note, User user){
@@ -56,7 +57,7 @@ public class UserNoteService {
         UserHelper.checkUsernames(userNote.getUsername(),user.getUsername(),
                 "You are not allowed to edit this note!");
 
-        return decryptNote(noteRepository.save(encryptNote(note)));
+        return noteHelper.decryptNote(noteRepository.save(noteHelper.encryptNote(note)));
     }
 
     public List<Note> getUserNotes(User user){
@@ -65,7 +66,7 @@ public class UserNoteService {
         List<Note> notes = new ArrayList<Note>();
 
         for (UserNote userNote : userNoteRepo.findByUsername(user.getUsername())) {
-            notes.add(decryptNote(noteRepository.findOne(userNote.getNoteId())));
+            notes.add(noteHelper.decryptNote(noteRepository.findOne(userNote.getNoteId())));
         }
 
         return notes;
@@ -79,7 +80,7 @@ public class UserNoteService {
         UserHelper.checkUsernames(userNote.getUsername(),user.getUsername(),
                 "You are not allowed to view this note!");
 
-        return decryptNote(noteRepository.findOne(noteId));
+        return noteHelper.decryptNote(noteRepository.findOne(noteId));
     }
 
     @Transactional
@@ -95,21 +96,4 @@ public class UserNoteService {
         noteRepository.delete(userNote.getNoteId());
     }
 
-    private Note encryptNote(Note note){
-        try {
-            note.setDetails(cryptUtils.encrypt(note.getDetails()));
-        } catch (Exception e){
-            throw new RuntimeException(e);
-        }
-        return note;
-    }
-
-    private Note decryptNote(Note note){
-        try {
-            note.setDetails(cryptUtils.decrypt(note.getDetails()));
-        } catch (Exception e){
-            throw new RuntimeException(e);
-        }
-        return note;
-    }
 }
