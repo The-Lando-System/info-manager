@@ -121,7 +121,16 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://C:/Users/Matt/Development/local-repo/sarlacc-java-client/sarlacc-java-client-1.0.jar!/"/>
+          <root url="jar://C:/Users/Matt/.gradle/caches/modules-2/files-2.1/com.github.The-Lando-System/crypt-utils/-SNAPSHOT/465c73e93b2b7fffcaa2cee84e35b4c0627ec632/crypt-utils--SNAPSHOT.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Matt/.gradle/caches/modules-2/files-2.1/com.github.The-Lando-System/sarlacc-java-client/-SNAPSHOT/c00881c06f06e2af8bc503d8b8edf2599d9051c8/sarlacc-java-client--SNAPSHOT.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES/>
@@ -355,6 +364,26 @@
         <JAVADOC/>
         <SOURCES>
           <root url="jar://C:/Users/Matt/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-mongodb/1.9.2.RELEASE/5d612fa830d98752e546727ec241d610d8a0f909/spring-data-mongodb-1.9.2.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Matt/.gradle/caches/modules-2/files-2.1/com.github.The-Lando-System/sarlacc-model/-SNAPSHOT/12b7cd97c4759b91720997c3713570be536f0fd7/sarlacc-model--SNAPSHOT.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Matt/.gradle/caches/modules-2/files-2.1/org.mockito/mockito-all/1.9.5/79a8984096fc6591c1e3690e07d41be506356fa5/mockito-all-1.9.5.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Matt/.gradle/caches/modules-2/files-2.1/org.mockito/mockito-all/1.9.5/b8086d4e4daa361fc746abea62f77a2ae55d3ed9/mockito-all-1.9.5-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
