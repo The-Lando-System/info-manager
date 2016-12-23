@@ -1,8 +1,8 @@
 build
 .idea
 .gradle
-sarlacc.iml
-sarlacc.ipr
-sarlacc.iws
+*.iml
+*.ipr
+*.iws
 configure.properties
 application.properties
