@@ -29,8 +29,8 @@ dependencies {
       exclude module: "spring-boot-starter-tomcat"
     }
     compile("org.springframework.boot:spring-boot-starter-jetty")
-    compile("org.springframework.boot:spring-boot-starter-security")
-    compile("org.springframework.security.oauth:spring-security-oauth2")
+    //compile("org.springframework.boot:spring-boot-starter-security")
+    //compile("org.springframework.security.oauth:spring-security-oauth2")
 
     compile("org.springframework.boot:spring-boot-starter-data-rest")
     compile("org.springframework.boot:spring-boot-starter-data-mongodb")
@@ -40,6 +40,8 @@ dependencies {
 
     compile group: 'org.json', name: 'json', version: '20160810'
 
+    compile group: 'com.google.guava', name: 'guava', version: '19.0'
+
     compile 'com.github.The-Lando-System:crypt-utils:-SNAPSHOT'
-    compile 'com.github.The-Lando-System:sarlacc-java-client:-SNAPSHOT'
+    compile 'com.github.The-Lando-System:sarlacc-model:-SNAPSHOT'
 }
