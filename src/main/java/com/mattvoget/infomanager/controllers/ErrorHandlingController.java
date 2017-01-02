@@ -1,6 +1,6 @@
 package com.mattvoget.infomanager.controllers;
 
-import com.mattvoget.infomanager.config.SarlaccUserException;
+import com.mattvoget.sarlacc.client.SarlaccUserException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 

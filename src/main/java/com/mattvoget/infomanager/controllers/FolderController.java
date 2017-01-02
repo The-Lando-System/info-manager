@@ -1,10 +1,10 @@
 
 package com.mattvoget.infomanager.controllers;
 
-import com.mattvoget.infomanager.config.SarlaccUserService;
 import com.mattvoget.infomanager.models.Folder;
 import com.mattvoget.infomanager.models.Note;
 import com.mattvoget.infomanager.services.FolderService;
+import com.mattvoget.sarlacc.client.SarlaccUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.mattvoget.infomanager.config.SarlaccUserService.TOKEN_NAME;
+import static com.mattvoget.sarlacc.client.SarlaccUserService.TOKEN_NAME;
 
 @Controller
 @RequestMapping(value="folders", produces= MediaType.APPLICATION_JSON_VALUE)

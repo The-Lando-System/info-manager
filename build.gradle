@@ -43,5 +43,5 @@ dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
 
     compile 'com.github.The-Lando-System:crypt-utils:-SNAPSHOT'
-    compile 'com.github.The-Lando-System:sarlacc-model:-SNAPSHOT'
+    compile 'com.github.The-Lando-System:sarlacc-java-client:-SNAPSHOT'
 }

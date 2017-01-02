@@ -1,8 +1,8 @@
 package com.mattvoget.infomanager.controllers;
 
-import com.mattvoget.infomanager.config.SarlaccUserService;
 import com.mattvoget.infomanager.models.Note;
 import com.mattvoget.infomanager.services.UserNoteService;
+import com.mattvoget.sarlacc.client.SarlaccUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.mattvoget.infomanager.config.SarlaccUserService.TOKEN_NAME;
+import static com.mattvoget.sarlacc.client.SarlaccUserService.TOKEN_NAME;
 
 @Controller
 @RequestMapping(value="notes", produces= MediaType.APPLICATION_JSON_VALUE)
