@@ -1,6 +1,6 @@
 package com.mattvoget.infomanager.controllers;
 
-import com.mattvoget.cryptutils.CryptUtils;
+import com.mattvoget.infomanager.config.SarlaccUserService;
 import com.mattvoget.infomanager.models.Note;
 import com.mattvoget.infomanager.services.UserNoteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,49 +10,46 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//@Controller
-//@RequestMapping(value="notes", produces= MediaType.APPLICATION_JSON_VALUE)
-public class UserNotesController {// extends ErrorHandlingController {
+import static com.mattvoget.infomanager.config.SarlaccUserService.TOKEN_NAME;
 
-//    @Autowired
-//    SecurityHelper securityHelper;
-//
-//    @Autowired
-//    UserNoteService userNoteService;
-//
-//    @RequestMapping(value="/", method= RequestMethod.POST)
-//    @ResponseBody
-//    public Note createUserNote(@RequestBody Note note, @RequestHeader(value="x-access-token") String accessToken) {
-//        securityHelper.checkAccess(accessToken);
-//        return userNoteService.createNote(note,securityHelper.getUser());
-//    }
-//
-//    @RequestMapping(value="/", method= RequestMethod.GET)
-//    @ResponseBody
-//    public List<Note> getUserNotes(@RequestHeader(value="x-access-token") String accessToken) {
-//        securityHelper.checkAccess(accessToken);
-//        return userNoteService.getUserNotes(securityHelper.getUser());
-//    }
-//
-//    @RequestMapping(value="/", method= RequestMethod.PUT)
-//    @ResponseBody
-//    public Note editUserNote(@RequestBody Note note, @RequestHeader(value="x-access-token") String accessToken) {
-//        securityHelper.checkAccess(accessToken);
-//        return userNoteService.editNote(note,securityHelper.getUser());
-//    }
-//
-//    @RequestMapping(value="/{noteId}", method= RequestMethod.GET)
-//    @ResponseBody
-//    public Note getNoteById(@RequestHeader(value="x-access-token") String accessToken, @PathVariable String noteId ) {
-//        securityHelper.checkAccess(accessToken);
-//        return userNoteService.getNoteById(noteId, securityHelper.getUser());
-//    }
-//
-//    @RequestMapping(value="/{noteId}", method= RequestMethod.DELETE)
-//    @ResponseBody
-//    public void deleteUserNote(@RequestHeader(value="x-access-token") String accessToken, @PathVariable String noteId) {
-//        securityHelper.checkAccess(accessToken);
-//        userNoteService.deleteNote(noteId,securityHelper.getUser());
-//    }
+@Controller
+@RequestMapping(value="notes", produces= MediaType.APPLICATION_JSON_VALUE)
+public class UserNotesController {
+
+    @Autowired
+    private SarlaccUserService sarlaccUserService;
+
+    @Autowired
+    UserNoteService userNoteService;
+
+    @RequestMapping(value="/", method= RequestMethod.POST)
+    @ResponseBody
+    public Note createUserNote(@RequestHeader(value=TOKEN_NAME) String accessToken, @RequestBody Note note) {
+        return userNoteService.createNote(note,sarlaccUserService.getUser(accessToken));
+    }
+
+    @RequestMapping(value="/", method= RequestMethod.GET)
+    @ResponseBody
+    public List<Note> getUserNotes(@RequestHeader(value=TOKEN_NAME) String accessToken) {
+        return userNoteService.getUserNotes(sarlaccUserService.getUser(accessToken));
+    }
+
+    @RequestMapping(value="/", method= RequestMethod.PUT)
+    @ResponseBody
+    public Note editUserNote(@RequestHeader(value=TOKEN_NAME) String accessToken, @RequestBody Note note) {
+        return userNoteService.editNote(note,sarlaccUserService.getUser(accessToken));
+    }
+
+    @RequestMapping(value="/{noteId}", method= RequestMethod.GET)
+    @ResponseBody
+    public Note getNoteById(@RequestHeader(value=TOKEN_NAME) String accessToken, @PathVariable String noteId ) {
+        return userNoteService.getNoteById(noteId, sarlaccUserService.getUser(accessToken));
+    }
+
+    @RequestMapping(value="/{noteId}", method= RequestMethod.DELETE)
+    @ResponseBody
+    public void deleteUserNote(@RequestHeader(value=TOKEN_NAME) String accessToken, @PathVariable String noteId) {
+        userNoteService.deleteNote(noteId,sarlaccUserService.getUser(accessToken));
+    }
 
 }

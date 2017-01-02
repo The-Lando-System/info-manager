@@ -24,6 +24,12 @@ public class SarlaccUserFilter implements Filter{
         log.info("Entering the Sarlacc User Filter!");
         log.info("Size of the user cache is " + sarlaccUserService.getUserCacheSize());
 
+
+        // Check that the access token is present in the x-access-token header on all requests
+        
+
+
+
         filterChain.doFilter(servletRequest,servletResponse);
     }
 

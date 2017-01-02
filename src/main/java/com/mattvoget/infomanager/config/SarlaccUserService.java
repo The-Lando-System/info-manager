@@ -17,6 +17,8 @@ public class SarlaccUserService {
 
     private Logger log = LoggerFactory.getLogger(SarlaccUserService.class);
 
+    public static final String TOKEN_NAME = "x-access-token";
+
     @Value("${auth.url.token}")
     private String authUrlToken;
 
@@ -68,7 +70,7 @@ public class SarlaccUserService {
             user = userCache.get(accessToken);
         } catch (Exception e){
             log.info("Failed to get a user!");
-            throw new RuntimeException(e);
+            throw new SarlaccUserException("A bad access token was provided");
         }
 
         log.info("Returning user with username: " + user.getUsername());

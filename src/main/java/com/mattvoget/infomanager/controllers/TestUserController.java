@@ -14,7 +14,7 @@ public class TestUserController {
     @Autowired
     private SarlaccUserService sarlaccUserService;
 
-    @RequestMapping(value="/{accessToken}", method= RequestMethod.GET)
+    @RequestMapping(value="/{accessToken}", method=RequestMethod.GET)
     @ResponseBody
     public User login(@PathVariable String accessToken) {
         return sarlaccUserService.getUser(accessToken);
