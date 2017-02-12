@@ -104,8 +104,9 @@ public class FolderService {
         int i = 0;
 
         for (String noteId : folder.getNoteIds()){
+            UserNote userNote = userNoteRepo.findByNoteId(noteId);
+            userNoteRepo.delete(userNote);
             noteRepository.delete(noteId);
-            userNoteRepo.delete(noteId);
             i++;
         }
 
