@@ -22,10 +22,10 @@ public class UserNotesController {
     @Autowired
     UserNoteService userNoteService;
 
-    @RequestMapping(value="/", method= RequestMethod.POST)
+    @RequestMapping(value="/{folderId}", method= RequestMethod.POST)
     @ResponseBody
-    public Note createUserNote(@RequestHeader(value=TOKEN_NAME) String accessToken, @RequestBody Note note) {
-        return userNoteService.createNote(note,sarlaccUserService.getUser(accessToken));
+    public Note createUserNoteInFolder(@RequestHeader(value=TOKEN_NAME) String accessToken, @RequestBody Note note, @PathVariable String folderId ) {
+        return userNoteService.createNote(note,folderId,sarlaccUserService.getUser(accessToken));
     }
 
     @RequestMapping(value="/", method= RequestMethod.GET)
@@ -46,10 +46,10 @@ public class UserNotesController {
         return userNoteService.getNoteById(noteId, sarlaccUserService.getUser(accessToken));
     }
 
-    @RequestMapping(value="/{noteId}", method= RequestMethod.DELETE)
+    @RequestMapping(value="/{noteId}/{folderId}", method= RequestMethod.DELETE)
     @ResponseBody
-    public void deleteUserNote(@RequestHeader(value=TOKEN_NAME) String accessToken, @PathVariable String noteId) {
-        userNoteService.deleteNote(noteId,sarlaccUserService.getUser(accessToken));
+    public void deleteUserNote(@RequestHeader(value=TOKEN_NAME) String accessToken, @PathVariable String noteId, @PathVariable String folderId) {
+        userNoteService.deleteNote(noteId,folderId,sarlaccUserService.getUser(accessToken));
     }
 
 }
