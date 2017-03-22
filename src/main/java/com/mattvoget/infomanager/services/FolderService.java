@@ -92,12 +92,25 @@ public class FolderService {
 
     @Transactional
     public void deleteFolder(String folderId, User user){
-        log.info(String.format("Deleting the following folder for user %s: %s",user.getUsername(),folderId));
+        log.info(String.format("Deleting the following folder and its associated notes for user %s: %s",user.getUsername(),folderId));
 
         UserFolder userFolder = userFolderRepo.findByFolderId(folderId);
 
         UserHelper.checkUsernames(userFolder.getUsername(),user.getUsername(),
                 "You are not allowed to delete this folder!");
+
+        Folder folder = folderRepository.findOne(userFolder.getFolderId());
+
+        int i = 0;
+
+        for (String noteId : folder.getNoteIds()){
+            UserNote userNote = userNoteRepo.findByNoteId(noteId);
+            userNoteRepo.delete(userNote);
+            noteRepository.delete(noteId);
+            i++;
+        }
+
+        log.info(String.format("Deleted %d notes from the folder",i));
 
         userFolderRepo.delete(userFolder.getId());
         folderRepository.delete(userFolder.getFolderId());

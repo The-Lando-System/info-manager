@@ -3,6 +3,7 @@ package com.mattvoget.infomanager.services;
 import com.mattvoget.cryptutils.CryptUtils;
 import com.mattvoget.infomanager.models.Note;
 import com.mattvoget.infomanager.models.UserNote;
+import com.mattvoget.infomanager.repositories.FolderRepository;
 import com.mattvoget.infomanager.repositories.NoteRepository;
 import com.mattvoget.infomanager.repositories.UserNoteRepository;
 import com.mattvoget.infomanager.utils.NoteHelper;
@@ -30,12 +31,15 @@ public class UserNoteService {
     NoteRepository noteRepository;
 
     @Autowired
+    FolderService folderService;
+
+    @Autowired
     NoteHelper noteHelper;
 
     @Transactional
-    public Note createNote(Note note, User user){
+    public Note createNote(Note note, String folderId, User user){
 
-        log.info("Creating a new note for user: " + user.getUsername());
+        log.info(String.format("Creating a new note for user %s in folder %s", user.getUsername(), folderId));
 
         Note savedNote = noteRepository.save(noteHelper.encryptNote(note));
 
@@ -44,6 +48,7 @@ public class UserNoteService {
         userNote.setNoteId(savedNote.getId());
 
         userNoteRepo.save(userNote);
+        folderService.addNoteToFolder(folderId,savedNote.getId(),user);
 
         return noteHelper.decryptNote(savedNote);
     }
@@ -84,16 +89,19 @@ public class UserNoteService {
     }
 
     @Transactional
-    public void deleteNote(String noteId, User user){
-        log.info(String.format("Deleting the following note for user %s: %s",user.getUsername(),noteId));
+    public void deleteNote(String noteId, String folderId, User user){
+        log.info(String.format("Deleting the following note with id %s for user %s from folder %s",noteId,user.getUsername(),folderId));
 
         UserNote userNote = userNoteRepo.findByNoteId(noteId);
 
         UserHelper.checkUsernames(userNote.getUsername(),user.getUsername(),
                 "You are not allowed to delete this note!");
 
+        folderService.removeNoteFromFolder(folderId,userNote.getNoteId(),user);
+
         userNoteRepo.delete(userNote.getId());
         noteRepository.delete(userNote.getNoteId());
+
     }
 
 }
