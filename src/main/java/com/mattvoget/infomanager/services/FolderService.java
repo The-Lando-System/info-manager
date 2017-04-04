@@ -1,13 +1,7 @@
 package com.mattvoget.infomanager.services;
 
-import com.mattvoget.infomanager.models.Folder;
-import com.mattvoget.infomanager.models.Note;
-import com.mattvoget.infomanager.models.UserFolder;
-import com.mattvoget.infomanager.models.UserNote;
-import com.mattvoget.infomanager.repositories.FolderRepository;
-import com.mattvoget.infomanager.repositories.NoteRepository;
-import com.mattvoget.infomanager.repositories.UserFolderRepository;
-import com.mattvoget.infomanager.repositories.UserNoteRepository;
+import com.mattvoget.infomanager.models.*;
+import com.mattvoget.infomanager.repositories.*;
 import com.mattvoget.infomanager.utils.NoteHelper;
 import com.mattvoget.infomanager.utils.UserHelper;
 import com.mattvoget.sarlacc.models.User;
@@ -28,6 +22,7 @@ public class FolderService {
     @Autowired private UserNoteRepository userNoteRepo;
     @Autowired private FolderRepository folderRepository;
     @Autowired private NoteRepository noteRepository;
+    @Autowired private NoteOrderRepository noteOrderRepository;
     @Autowired private NoteHelper noteHelper;
 
     @Transactional
@@ -157,5 +152,31 @@ public class FolderService {
         Folder folder = folderRepository.findOne(folderId);
         folder.getNoteIds().remove(noteId);
         return folderRepository.save(folder);
+    }
+
+    @Transactional
+    public NoteOrder getNoteOrder(String folderId, User user) {
+        log.info(String.format("Getting note order for folder %s for user %s",folderId,user.getUsername()));
+
+        UserFolder userFolder = userFolderRepo.findByFolderId(folderId);
+
+        UserHelper.checkUsernames(userFolder.getUsername(),user.getUsername(),
+                "You are not allowed to get the note order for this folder");
+
+        return noteOrderRepository.findByFolderId(userFolder.getFolderId());
+    }
+
+    @Transactional
+    public NoteOrder setNoteOrder(NoteOrder noteOrder, User user) {
+        log.info(String.format("Setting note order for folder %s for user %s",noteOrder.getFolderId(),user.getUsername()));
+
+        UserFolder userFolder = userFolderRepo.findByFolderId(noteOrder.getFolderId());
+
+        UserHelper.checkUsernames(userFolder.getUsername(),user.getUsername(),
+                "You are not allowed to set the note order for this folder");
+
+        noteOrder.setUsername(user.getUsername());
+
+        return noteOrderRepository.save(noteOrder);
     }
 }
