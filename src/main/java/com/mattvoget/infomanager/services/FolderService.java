@@ -24,20 +24,11 @@ import java.util.List;
 public class FolderService {
     private Logger log = LoggerFactory.getLogger(FolderService.class);
 
-    @Autowired
-    UserFolderRepository userFolderRepo;
-
-    @Autowired
-    UserNoteRepository userNoteRepo;
-
-    @Autowired
-    FolderRepository folderRepository;
-
-    @Autowired
-    NoteRepository noteRepository;
-
-    @Autowired
-    NoteHelper noteHelper;
+    @Autowired private UserFolderRepository userFolderRepo;
+    @Autowired private UserNoteRepository userNoteRepo;
+    @Autowired private FolderRepository folderRepository;
+    @Autowired private NoteRepository noteRepository;
+    @Autowired private NoteHelper noteHelper;
 
     @Transactional
     public Folder createFolder(Folder folder, User user){

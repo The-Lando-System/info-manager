@@ -3,11 +3,14 @@ package com.mattvoget.infomanager.controllers;
 
 import com.mattvoget.infomanager.models.Folder;
 import com.mattvoget.infomanager.models.Note;
+import com.mattvoget.infomanager.repositories.PreferenceRepository;
 import com.mattvoget.infomanager.services.FolderService;
+import com.mattvoget.infomanager.services.PreferenceService;
 import com.mattvoget.sarlacc.client.SarlaccUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +25,9 @@ public class FolderController extends ErrorHandlingController {
 
     private Logger log = LoggerFactory.getLogger(FolderController.class);
 
-    @Autowired
-    private SarlaccUserService sarlaccUserService;
-
-    @Autowired
-    FolderService folderService;
+    @Autowired private SarlaccUserService sarlaccUserService;
+    @Autowired private FolderService folderService;
+    @Autowired private PreferenceService preferenceService;
 
     @RequestMapping(value="/", method= RequestMethod.POST)
     @ResponseBody
@@ -74,5 +75,11 @@ public class FolderController extends ErrorHandlingController {
     @ResponseBody
     public Folder removeNoteFromFolder(@RequestHeader(value=TOKEN_NAME) String accessToken, @PathVariable String folderId, @PathVariable String noteId ) {
         return folderService.removeNoteFromFolder(folderId, noteId, sarlaccUserService.getUser(accessToken));
+    }
+
+    @RequestMapping(value="/make-primary/{folderId}", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public void makeFolderPrimary(@RequestHeader(value=TOKEN_NAME) String accessToken, @PathVariable String folderId) {
+        preferenceService.savePrimaryFolderPreference(folderId, sarlaccUserService.getUser(accessToken));
     }
 }
