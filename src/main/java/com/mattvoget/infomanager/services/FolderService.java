@@ -177,6 +177,11 @@ public class FolderService {
 
         noteOrder.setUsername(user.getUsername());
 
+        NoteOrder existingNoteOrder = noteOrderRepository.findByFolderId(noteOrder.getFolderId());
+        if (existingNoteOrder != null){
+            noteOrder.setId(existingNoteOrder.getId());
+        }
+        
         return noteOrderRepository.save(noteOrder);
     }
 }
