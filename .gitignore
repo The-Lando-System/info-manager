@@ -1,8 +1,9 @@
 build
 .idea
 .gradle
-*.iml
-*.ipr
-*.iws
+.classpath
+.project
+.settings
 configure.properties
 application.properties
+/bin/

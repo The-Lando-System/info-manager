@@ -1,32 +1,32 @@
 
 package com.mattvoget.infomanager.controllers;
 
-import com.mattvoget.infomanager.models.Folder;
-import com.mattvoget.infomanager.models.Note;
-import com.mattvoget.infomanager.models.NoteOrder;
-import com.mattvoget.infomanager.repositories.PreferenceRepository;
-import com.mattvoget.infomanager.services.FolderService;
-import com.mattvoget.infomanager.services.PreferenceService;
-import com.mattvoget.sarlacc.client.SarlaccUserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.mattvoget.sarlacc.client.SarlaccUserService.TOKEN_NAME;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static com.mattvoget.sarlacc.client.SarlaccUserService.TOKEN_NAME;
+import com.mattvoget.infomanager.models.Folder;
+import com.mattvoget.infomanager.models.Note;
+import com.mattvoget.infomanager.models.NoteOrder;
+import com.mattvoget.infomanager.services.FolderService;
+import com.mattvoget.infomanager.services.PreferenceService;
+import com.mattvoget.sarlacc.client.SarlaccUserService;
 
 @Controller
 @RequestMapping(value="folders", produces= MediaType.APPLICATION_JSON_VALUE)
 public class FolderController extends ErrorHandlingController {
-
-    private Logger log = LoggerFactory.getLogger(FolderController.class);
 
     @Autowired private SarlaccUserService sarlaccUserService;
     @Autowired private FolderService folderService;

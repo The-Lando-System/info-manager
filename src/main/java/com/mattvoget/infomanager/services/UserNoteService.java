@@ -1,23 +1,21 @@
 package com.mattvoget.infomanager.services;
 
-import com.mattvoget.cryptutils.CryptUtils;
-import com.mattvoget.infomanager.models.Note;
-import com.mattvoget.infomanager.models.UserNote;
-import com.mattvoget.infomanager.repositories.FolderRepository;
-import com.mattvoget.infomanager.repositories.NoteRepository;
-import com.mattvoget.infomanager.repositories.UserNoteRepository;
-import com.mattvoget.infomanager.utils.NoteHelper;
-import com.mattvoget.infomanager.utils.UserHelper;
-import com.mattvoget.sarlacc.models.User;
-import org.apache.commons.lang3.StringUtils;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.mattvoget.infomanager.models.Note;
+import com.mattvoget.infomanager.models.UserNote;
+import com.mattvoget.infomanager.repositories.NoteRepository;
+import com.mattvoget.infomanager.repositories.UserNoteRepository;
+import com.mattvoget.infomanager.utils.NoteHelper;
+import com.mattvoget.infomanager.utils.UserHelper;
+import com.mattvoget.sarlacc.models.User;
 
 @Service
 public class UserNoteService {
