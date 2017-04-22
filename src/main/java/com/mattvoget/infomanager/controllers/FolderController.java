@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.mattvoget.infomanager.models.Folder;
-import com.mattvoget.infomanager.models.Note;
 import com.mattvoget.infomanager.models.NoteOrder;
 import com.mattvoget.infomanager.services.FolderService;
 import com.mattvoget.infomanager.services.PreferenceService;
@@ -60,12 +59,6 @@ public class FolderController extends ErrorHandlingController {
     @ResponseBody
     public void deleteFolder(@RequestHeader(value=TOKEN_NAME) String accessToken, @PathVariable String folderId) {
         folderService.deleteFolder(folderId,sarlaccUserService.getUser(accessToken));
-    }
-
-    @RequestMapping(value="/{folderId}/notes", method= RequestMethod.GET)
-    @ResponseBody
-    public List<Note> getNotesInFolder(@RequestHeader(value=TOKEN_NAME) String accessToken, @PathVariable String folderId ) {
-        return folderService.getNotesInFolder(folderId,sarlaccUserService.getUser(accessToken));
     }
 
     @RequestMapping(value="/{folderId}/{noteId}", method= RequestMethod.POST)

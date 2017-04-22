@@ -1,19 +1,26 @@
 package com.mattvoget.infomanager.services;
 
-import com.mattvoget.infomanager.models.*;
-import com.mattvoget.infomanager.repositories.*;
-import com.mattvoget.infomanager.utils.NoteHelper;
-import com.mattvoget.infomanager.utils.UserHelper;
-import com.mattvoget.sarlacc.models.Role;
-import com.mattvoget.sarlacc.models.User;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.mattvoget.infomanager.models.Folder;
+import com.mattvoget.infomanager.models.NoteOrder;
+import com.mattvoget.infomanager.models.UserFolder;
+import com.mattvoget.infomanager.models.UserNote;
+import com.mattvoget.infomanager.repositories.FolderRepository;
+import com.mattvoget.infomanager.repositories.NoteOrderRepository;
+import com.mattvoget.infomanager.repositories.NoteRepository;
+import com.mattvoget.infomanager.repositories.UserFolderRepository;
+import com.mattvoget.infomanager.repositories.UserNoteRepository;
+import com.mattvoget.infomanager.utils.UserHelper;
+import com.mattvoget.sarlacc.models.Role;
+import com.mattvoget.sarlacc.models.User;
 
 @Service
 public class FolderService {
@@ -24,7 +31,6 @@ public class FolderService {
     @Autowired private FolderRepository folderRepository;
     @Autowired private NoteRepository noteRepository;
     @Autowired private NoteOrderRepository noteOrderRepository;
-    @Autowired private NoteHelper noteHelper;
     
     private int demoFolders = 0;
 
@@ -121,22 +127,6 @@ public class FolderService {
 
         userFolderRepo.delete(userFolder.getId());
         folderRepository.delete(userFolder.getFolderId());
-    }
-
-    public List<Note> getNotesInFolder(String folderId, User user) {
-        log.info(String.format("Retrieving all notes in for user %s in folder: %s",user.getUsername(),folderId));
-        UserFolder userFolder = userFolderRepo.findByFolderId(folderId);
-
-        UserHelper.checkUsernames(userFolder.getUsername(),user.getUsername(),
-                "You are not allowed to access notes for this folder!");
-
-        List<Note> notes = new ArrayList<>();
-
-        for (String noteId : folderRepository.findOne(folderId).getNoteIds()){
-            notes.add(noteHelper.decryptNote(noteRepository.findOne(noteId)));
-        }
-
-        return notes;
     }
 
     @Transactional

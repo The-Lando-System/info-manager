@@ -51,5 +51,12 @@ public class UserNotesController {
     public void deleteUserNote(@RequestHeader(value=TOKEN_NAME) String accessToken, @PathVariable String noteId, @PathVariable String folderId) {
         userNoteService.deleteNote(noteId,folderId,sarlaccUserService.getUser(accessToken));
     }
+    
+    @RequestMapping(value="/{folderId}/notes", method= RequestMethod.GET)
+    @ResponseBody
+    public List<Note> getNotesInFolder(@RequestHeader(value=TOKEN_NAME) String accessToken, @PathVariable String folderId ) {
+        return userNoteService.getNotesInFolder(folderId,sarlaccUserService.getUser(accessToken));
+    }
+
 
 }
