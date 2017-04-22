@@ -22,17 +22,10 @@ public class UserNoteService {
 
     private Logger log = LoggerFactory.getLogger(UserNoteService.class);
 
-    @Autowired
-    UserNoteRepository userNoteRepo;
-
-    @Autowired
-    NoteRepository noteRepository;
-
-    @Autowired
-    FolderService folderService;
-
-    @Autowired
-    NoteHelper noteHelper;
+    @Autowired UserNoteRepository userNoteRepo;
+    @Autowired NoteRepository noteRepository;
+    @Autowired FolderService folderService;
+    @Autowired NoteHelper noteHelper;
 
     @Transactional
     public Note createNote(Note note, String folderId, User user){

@@ -4,6 +4,7 @@ import com.mattvoget.infomanager.models.*;
 import com.mattvoget.infomanager.repositories.*;
 import com.mattvoget.infomanager.utils.NoteHelper;
 import com.mattvoget.infomanager.utils.UserHelper;
+import com.mattvoget.sarlacc.models.Role;
 import com.mattvoget.sarlacc.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,11 +25,20 @@ public class FolderService {
     @Autowired private NoteRepository noteRepository;
     @Autowired private NoteOrderRepository noteOrderRepository;
     @Autowired private NoteHelper noteHelper;
+    
+    private int demoFolders = 0;
 
     @Transactional
     public Folder createFolder(Folder folder, User user){
 
         log.info("Creating a new folder for user: " + user.getUsername());
+        
+        if (user.getRole() == Role.DEMO){
+        	if (demoFolders > 5){
+        		throw new IllegalArgumentException("Cannot create more than 5 folders for a DEMO user");
+        	}
+        	demoFolders++;
+        }
 
         Folder savedFolder = folderRepository.save(folder);
 
@@ -62,6 +72,10 @@ public class FolderService {
             folders.add(folderRepository.findOne(userFolder.getFolderId()));
         }
 
+        if (user.getRole() == Role.DEMO){
+        	demoFolders = folders.size();
+        }
+        
         return folders;
     }
 
@@ -95,6 +109,13 @@ public class FolderService {
             noteRepository.delete(noteId);
             i++;
         }
+        
+        if (user.getRole() == Role.DEMO){
+        	if (demoFolders > 0){
+        		demoFolders--;
+        	}
+        }
+
 
         log.info(String.format("Deleted %d notes from the folder",i));
 
