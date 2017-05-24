@@ -1,15 +1,14 @@
 package com.mattvoget.infomanager;
 
-import com.mattvoget.cryptutils.CryptUtils;
-import com.mattvoget.sarlacc.client.SarlaccAdminFilter;
-import com.mattvoget.sarlacc.client.SarlaccUserFilter;
-import com.mattvoget.sarlacc.client.SarlaccUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+
+import com.mattvoget.cryptutils.CryptUtils;
+import com.mattvoget.sarlacc.client.SarlaccUserFilter;
+import com.mattvoget.sarlacc.client.SarlaccUserService;
 
 @SpringBootApplication
 public class Application {
@@ -28,39 +27,24 @@ public class Application {
     }
 
     // Use the Sarlacc for user information ==============
-    @Value("${auth.url.token}")
-    private String authUrlToken;
+    @Value("${sarlacc.url}")
+    private String sarlaccUrl;
 
-    @Value("${auth.url.user}")
-    private String authUrlUser;
+    @Value("${sarlacc.client.id}")
+    private String sarlaccClientId;
 
-    @Value("${auth.client.id}")
-    private String authClientId;
-
-    @Value("${auth.client.password}")
-    private String authClientPassword;
+    @Value("${sarlacc.client.password}")
+    private String sarlaccClientPassword;
 
     @Bean
     public SarlaccUserService sarlaccUserService(){
-        return new SarlaccUserService(authUrlToken,authUrlUser,authClientId,authClientPassword);
+        return new SarlaccUserService(sarlaccUrl,sarlaccClientId,sarlaccClientPassword);
     }
 
     @Bean
     @Autowired
     public SarlaccUserFilter sarlaccUserFilter(SarlaccUserService sarlaccUserService){
         return new SarlaccUserFilter(sarlaccUserService);
-    }
-
-    @Bean
-    @Autowired
-    public FilterRegistrationBean adminFilterBean(SarlaccUserService sarlaccUserService) {
-        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-        registrationBean.setName("adminFilter");
-        SarlaccAdminFilter adminFilter = new SarlaccAdminFilter(sarlaccUserService);
-        registrationBean.setFilter(adminFilter);
-        registrationBean.addUrlPatterns("/note/*");
-        registrationBean.setOrder(2);
-        return registrationBean;
     }
 
 }
