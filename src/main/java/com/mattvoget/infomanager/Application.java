@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import com.mattvoget.cryptutils.CryptUtils;
 import com.mattvoget.sarlacc.client.SarlaccUserFilter;
 import com.mattvoget.sarlacc.client.SarlaccUserService;
+import com.mattvoget.sarlacc.client.SarlaccUserServiceImpl;
 
 @SpringBootApplication
 public class Application {
@@ -38,12 +39,12 @@ public class Application {
 
     @Bean
     public SarlaccUserService sarlaccUserService(){
-        return new SarlaccUserService(sarlaccUrl,sarlaccClientId,sarlaccClientPassword);
+        return new SarlaccUserServiceImpl(sarlaccUrl,sarlaccClientId,sarlaccClientPassword);
     }
 
     @Bean
     @Autowired
-    public SarlaccUserFilter sarlaccUserFilter(SarlaccUserService sarlaccUserService){
+    public SarlaccUserFilter sarlaccUserFilter(SarlaccUserServiceImpl sarlaccUserService){
         return new SarlaccUserFilter(sarlaccUserService);
     }
 
